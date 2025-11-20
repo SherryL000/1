@@ -1,0 +1,97 @@
+<%- include('../partials/header', { title: title }) %>
+
+<style>
+    body {
+        margin: 0;
+        
+    }
+.pet-world {
+        min-height: 80vh;
+        position: relative;
+        background: url("/images/bg.jpg");
+        border-radius: 15px;
+        border: 2px dashed rgba(255, 255, 255, 0.3);
+    }
+    </style>
+<div class="container">
+    <div class="text-center mb-4">
+        <h1 class="text-pink"> Pet World </h1>
+        <a href="/pets" class="btn btn-light me-2">My Pets</a>
+        <a href="/pets/create" class="btn btn-success">Adopt New Pet</a>
+    </div>
+
+    <div class="pet-world" id="petWorld">
+        <% if (typeof pets !== 'undefined' && pets.length > 0) { %>
+            <!-- Display pets directly using EJS -->
+            <<% 
+                const speciesEmoji = {
+                    'dragon': '🐉',
+                    'cat': '🐱',
+                    'dog': '🐶',
+                    'rat': '🐀',
+                    'elf': '🧝',
+                    'robot': '🤖',
+                    'wolf': '🐺',
+                    'deer': '🦌',
+                    'duck': '🦆',
+                    'bear': '🐻',
+                    'default': '🐾'
+                };
+            %>
+            
+            <% pets.forEach((pet, index) => { %>
+                <a href="/pets/<%= pet._id %>" 
+                   class="pet-emoji" 
+                   title="<%= pet.name %> - Click to view details"
+                   style="left: <%= 10 + (Math.random() * 80) %>%; 
+                          top: <%= 10 + (Math.random() * 80) %>%;
+                          animation-delay: <%= index * 0.3 %>s;"
+                   onmouseover="showPetTooltip(event, '<%= pet.name %>', '<%= pet.species %>')"
+                   onmouseout="hidePetTooltip()">
+                    <%= speciesEmoji[pet.species] || speciesEmoji.default %>
+                </a>
+            <% }) %>
+            
+            <!-- Tooltip element -->
+            <div id="petTooltip" class="pet-tooltip"></div>
+        <% } else { %>
+            <div class="no-pets-message">
+                <h3>No pets in the world yet! 🐾</h3>
+                <p>Adopt some pets to see them here</p>
+                <a href="/pets/create" class="btn btn-light">Adopt Your First Pet</a>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<script>
+    // Tooltip functions
+    function showPetTooltip(event, petName, petSpecies) {
+        const tooltip = document.getElementById('petTooltip');
+        tooltip.textContent = `${petName} (${petSpecies}) - Click to view details`;
+        tooltip.style.display = 'block';
+        updateTooltipPosition(event);
+    }
+
+    function hidePetTooltip() {
+        const tooltip = document.getElementById('petTooltip');
+        tooltip.style.display = 'none';
+    }
+
+    function updateTooltipPosition(event) {
+        const tooltip = document.getElementById('petTooltip');
+        tooltip.style.left = (event.clientX + 10) + 'px';
+        tooltip.style.top = (event.clientY + 10) + 'px';
+    }
+
+    // Update tooltip position when mouse moves
+    document.addEventListener('mousemove', function(event) {
+        const tooltip = document.getElementById('petTooltip');
+        if (tooltip.style.display === 'block') {
+            tooltip.style.left = (event.clientX + 10) + 'px';
+            tooltip.style.top = (event.clientY + 10) + 'px';
+        }
+    });
+</script>
+
+<%- include('../partials/footer') %>
