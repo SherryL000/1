@@ -99,10 +99,10 @@ router.get('/world', async (req, res) => {
   }
 });
 
-router.get('/dictionary', (req, res) => {
+router.get('/catalog', (req, res) => {
 
-  res.render('pets/dictionary', {
-    title: 'Pet Dictionary',
+  res.render('pets/catalog', {
+    title: 'Pet catalog',
     dbStatus: 'Connected',
     error: null
   });
